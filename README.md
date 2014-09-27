@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/github/license/philiprehberger/rb-math-kit)](LICENSE)
 [![Sponsor](https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ec6cb9)](https://github.com/sponsors/philiprehberger)
 
-Common math and statistics utilities for Ruby. Descriptive statistics, linear interpolation, rounding modes, and moving averages with zero dependencies.
+Statistics, interpolation, rounding modes, and moving averages for Ruby
 
 ## Requirements
 
@@ -108,4 +108,4 @@ bundle exec rubocop    # Check code style
 
 ## License
 
-MIT
+[MIT](LICENSE)
