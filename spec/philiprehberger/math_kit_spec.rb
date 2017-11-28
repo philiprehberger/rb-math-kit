@@ -168,6 +168,180 @@ RSpec.describe Philiprehberger::MathKit do
         expect { described_class.range([]) }.to raise_error(ArgumentError)
       end
     end
+
+    describe '.skewness' do
+      it 'returns positive skewness for right-skewed data' do
+        expect(described_class.skewness([1, 1, 1, 2, 5, 10])).to be > 0
+      end
+
+      it 'returns near-zero skewness for symmetric data' do
+        expect(described_class.skewness([1, 2, 3, 4, 5])).to be_within(0.5).of(0)
+      end
+
+      it 'returns zero for identical values' do
+        expect(described_class.skewness([5, 5, 5, 5])).to eq(0.0)
+      end
+
+      it 'raises with fewer than 3 values' do
+        expect { described_class.skewness([1, 2]) }.to raise_error(ArgumentError)
+      end
+    end
+
+    describe '.kurtosis' do
+      it 'returns near-zero for normally distributed data' do
+        data = [2, 3, 4, 4, 5, 5, 5, 6, 6, 7]
+        expect(described_class.kurtosis(data)).to be_within(2.0).of(0)
+      end
+
+      it 'returns zero for identical values' do
+        expect(described_class.kurtosis([3, 3, 3, 3, 3])).to eq(0.0)
+      end
+
+      it 'raises with fewer than 4 values' do
+        expect { described_class.kurtosis([1, 2, 3]) }.to raise_error(ArgumentError)
+      end
+    end
+
+    describe '.confidence_interval' do
+      it 'returns lower and upper bounds' do
+        data = [10, 12, 14, 16, 18]
+        lower, upper = described_class.confidence_interval(data, level: 0.95)
+        expect(lower).to be < 14.0
+        expect(upper).to be > 14.0
+        expect(lower).to be > 0
+      end
+
+      it 'narrows with larger sample' do
+        small = [10, 12, 14, 16, 18]
+        large = (1..100).map { |i| 14.0 + (i % 5) - 2 }
+        _, upper_small = described_class.confidence_interval(small, level: 0.95)
+        _, upper_large = described_class.confidence_interval(large, level: 0.95)
+        small_width = upper_small - described_class.mean(small)
+        large_width = upper_large - described_class.mean(large)
+        expect(large_width).to be < small_width
+      end
+
+      it 'raises with fewer than 2 values' do
+        expect { described_class.confidence_interval([1]) }.to raise_error(ArgumentError)
+      end
+
+      it 'raises for unsupported level' do
+        expect { described_class.confidence_interval([1, 2, 3], level: 0.80) }.to raise_error(ArgumentError)
+      end
+    end
+
+    describe '.correlation' do
+      it 'returns 1.0 for perfectly correlated data' do
+        expect(described_class.correlation([1, 2, 3, 4], [2, 4, 6, 8])).to be_within(0.001).of(1.0)
+      end
+
+      it 'returns -1.0 for perfectly inverse correlated data' do
+        expect(described_class.correlation([1, 2, 3, 4], [8, 6, 4, 2])).to be_within(0.001).of(-1.0)
+      end
+
+      it 'returns 0 for constant values' do
+        expect(described_class.correlation([1, 2, 3], [5, 5, 5])).to eq(0.0)
+      end
+
+      it 'raises for mismatched sizes' do
+        expect { described_class.correlation([1, 2], [1]) }.to raise_error(ArgumentError)
+      end
+    end
+
+    describe '.covariance' do
+      it 'returns positive covariance for co-moving data' do
+        expect(described_class.covariance([1, 2, 3, 4], [2, 4, 6, 8])).to be > 0
+      end
+
+      it 'returns negative covariance for inversely moving data' do
+        expect(described_class.covariance([1, 2, 3, 4], [8, 6, 4, 2])).to be < 0
+      end
+
+      it 'raises for fewer than 2 values' do
+        expect { described_class.covariance([1], [1]) }.to raise_error(ArgumentError)
+      end
+    end
+
+    describe '.normalize' do
+      it 'normalizes to 0..1 range' do
+        result = described_class.normalize([10, 20, 30])
+        expect(result).to eq([0.0, 0.5, 1.0])
+      end
+
+      it 'returns zeros for identical values' do
+        expect(described_class.normalize([5, 5, 5])).to eq([0.0, 0.0, 0.0])
+      end
+
+      it 'raises on empty array' do
+        expect { described_class.normalize([]) }.to raise_error(ArgumentError)
+      end
+    end
+
+    describe '.standardize' do
+      it 'produces mean ≈ 0 and stddev ≈ 1' do
+        result = described_class.standardize([10, 20, 30, 40, 50])
+        expect(described_class.mean(result)).to be_within(0.001).of(0.0)
+        expect(described_class.stddev(result, population: false)).to be_within(0.001).of(1.0)
+      end
+
+      it 'returns zeros for identical values' do
+        expect(described_class.standardize([7, 7, 7])).to eq([0.0, 0.0, 0.0])
+      end
+
+      it 'raises with fewer than 2 values' do
+        expect { described_class.standardize([1]) }.to raise_error(ArgumentError)
+      end
+    end
+
+    describe '.median_absolute_deviation' do
+      it 'calculates MAD' do
+        result = described_class.median_absolute_deviation([1, 1, 2, 2, 4, 6, 9])
+        expect(result).to eq(1.0)
+      end
+
+      it 'returns 0 for identical values' do
+        expect(described_class.median_absolute_deviation([3, 3, 3])).to eq(0.0)
+      end
+
+      it 'raises on empty array' do
+        expect { described_class.median_absolute_deviation([]) }.to raise_error(ArgumentError)
+      end
+    end
+
+    describe '.trimmed_mean' do
+      it 'trims extreme values' do
+        data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 100]
+        trimmed = described_class.trimmed_mean(data, trim: 0.1)
+        plain = described_class.mean(data)
+        expect(trimmed).to be < plain
+      end
+
+      it 'equals mean with zero trim' do
+        data = [1, 2, 3, 4, 5]
+        expect(described_class.trimmed_mean(data, trim: 0.0)).to eq(described_class.mean(data))
+      end
+
+      it 'raises on empty array' do
+        expect { described_class.trimmed_mean([]) }.to raise_error(ArgumentError)
+      end
+
+      it 'raises on invalid trim' do
+        expect { described_class.trimmed_mean([1, 2], trim: 0.5) }.to raise_error(ArgumentError)
+      end
+    end
+
+    describe '.winsorized_mean' do
+      it 'replaces extremes with boundary values' do
+        data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 100]
+        winsorized = described_class.winsorized_mean(data, trim: 0.1)
+        plain = described_class.mean(data)
+        expect(winsorized).to be < plain
+      end
+
+      it 'raises on empty array' do
+        expect { described_class.winsorized_mean([]) }.to raise_error(ArgumentError)
+      end
+    end
   end
 
   describe Philiprehberger::MathKit::Interpolation do
@@ -351,6 +525,47 @@ RSpec.describe Philiprehberger::MathKit do
 
       it 'raises when alpha is greater than 1' do
         expect { described_class.exponential([1], alpha: 1.5) }.to raise_error(ArgumentError)
+      end
+    end
+  end
+
+  describe Philiprehberger::MathKit::Regression do
+    describe '.linear' do
+      it 'fits a perfect line' do
+        result = described_class.linear([1, 2, 3, 4], [2, 4, 6, 8])
+        expect(result.slope).to be_within(0.001).of(2.0)
+        expect(result.intercept).to be_within(0.001).of(0.0)
+        expect(result.r_squared).to be_within(0.001).of(1.0)
+      end
+
+      it 'predicts values' do
+        result = described_class.linear([1, 2, 3, 4], [2, 4, 6, 8])
+        expect(result.predict(5)).to be_within(0.001).of(10.0)
+        expect(result.predict(0)).to be_within(0.001).of(0.0)
+      end
+
+      it 'fits noisy data with reasonable r_squared' do
+        result = described_class.linear([1, 2, 3, 4, 5], [2.1, 3.9, 6.2, 7.8, 10.1])
+        expect(result.slope).to be > 1.5
+        expect(result.r_squared).to be > 0.95
+      end
+
+      it 'handles negative slope' do
+        result = described_class.linear([1, 2, 3, 4], [8, 6, 4, 2])
+        expect(result.slope).to be_within(0.001).of(-2.0)
+        expect(result.intercept).to be_within(0.001).of(10.0)
+      end
+
+      it 'raises for mismatched sizes' do
+        expect { described_class.linear([1, 2], [1]) }.to raise_error(ArgumentError)
+      end
+
+      it 'raises for fewer than 2 points' do
+        expect { described_class.linear([1], [2]) }.to raise_error(ArgumentError)
+      end
+
+      it 'raises for identical x values' do
+        expect { described_class.linear([5, 5, 5], [1, 2, 3]) }.to raise_error(ArgumentError)
       end
     end
   end
