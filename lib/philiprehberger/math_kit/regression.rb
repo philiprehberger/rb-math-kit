@@ -5,7 +5,7 @@ module Philiprehberger
     # Linear regression analysis
     module Regression
       # Result of a linear regression
-      Result = Data.define(:slope, :intercept, :r_squared) do
+      Result = Struct.new(:slope, :intercept, :r_squared, keyword_init: true) do
         # Predict the y value for a given x
         #
         # @param x [Numeric] the input value
