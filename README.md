@@ -43,6 +43,28 @@ Philiprehberger::MathKit::Stats.sum([1, 2, 3])                # => 6
 Philiprehberger::MathKit::Stats.range([1, 5, 3, 9, 2])        # => 8
 ```
 
+### Summary Statistics
+
+```ruby
+Philiprehberger::MathKit::Stats.describe([1, 2, 3, 4, 5])
+# => { count: 5, mean: 3.0, median: 3.0, min: 1.0, max: 5.0,
+#      stddev: 1.58..., variance: 2.5, p25: 2.0, p50: 3.0, p75: 4.0 }
+```
+
+### Weighted Mean
+
+```ruby
+Philiprehberger::MathKit::Stats.weighted_mean([10, 20, 30], weights: [3, 1, 1])
+# => 16.0
+```
+
+### Histogram
+
+```ruby
+Philiprehberger::MathKit::Stats.histogram([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], bins: 5)
+# => [{ min: 1.0, max: 2.8, count: 2 }, { min: 2.8, max: 4.6, count: 2 }, ...]
+```
+
 ### Skewness and Kurtosis
 
 ```ruby
@@ -140,6 +162,9 @@ Philiprehberger::MathKit::MovingAverage.exponential([1, 2, 3, 4, 5], alpha: 0.5)
 | `.median_absolute_deviation(values)` | Median absolute deviation |
 | `.trimmed_mean(values, trim: 0.1)` | Trimmed mean (remove fraction from each end) |
 | `.winsorized_mean(values, trim: 0.1)` | Winsorized mean (clamp extremes) |
+| `.describe(values)` | Summary statistics hash (count, mean, median, min, max, stddev, percentiles) |
+| `.histogram(values, bins: 10)` | Frequency distribution as array of bin hashes |
+| `.weighted_mean(values, weights:)` | Weighted arithmetic mean |
 
 ### `Regression`
 

@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-04-10
+
+### Added
+- `Stats.describe(values)` for summary statistics (count, mean, median, min, max, stddev, variance, percentiles)
+- `Stats.histogram(values, bins:)` for frequency distribution into equal-width bins
+- `Stats.weighted_mean(values, weights:)` for weighted arithmetic mean
+
 ## [0.2.3] - 2026-04-08
 
 ### Changed
