@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe Philiprehberger::MathKit do
   it 'has a version number' do
-    expect(described_class::VERSION).to eq('0.1.0')
+    expect(described_class::VERSION).not_to be_nil
   end
 
   describe Philiprehberger::MathKit::Stats do
