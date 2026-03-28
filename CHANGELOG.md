@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-03-27
+
+### Added
+- Skewness (Fisher-Pearson sample skewness)
+- Kurtosis (excess kurtosis, Fisher definition)
+- Confidence intervals for the mean (90%, 95%, 99% levels with t-distribution)
+- Linear regression with slope, intercept, r-squared, and prediction
+- Pearson correlation coefficient
+- Sample covariance
+- Min-max normalization (normalize to 0..1)
+- Z-score standardization (mean=0, stddev=1)
+- Median absolute deviation (MAD)
+- Trimmed mean with configurable trim fraction
+- Winsorized mean with configurable trim fraction
+- `Regression` module with `Result` data class and `predict` method
+
 ## [0.1.2] - 2026-03-26
 
 ### Changed
