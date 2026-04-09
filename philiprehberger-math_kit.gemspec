@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.version = Philiprehberger::MathKit::VERSION
   spec.authors = ['Philip Rehberger']
   spec.email = ['me@philiprehberger.com']
-  spec.summary = 'Statistics, interpolation, rounding modes, and moving averages for Ruby'
+  spec.summary = 'Statistics, regression, interpolation, rounding modes, and moving averages for Ruby'
   spec.description = 'Descriptive statistics, linear interpolation, rounding modes, and moving averages. ' \
                      'Lightweight math toolkit with zero dependencies.'
   spec.homepage = 'https://philiprehberger.com/open-source-packages/ruby/philiprehberger-math_kit'
