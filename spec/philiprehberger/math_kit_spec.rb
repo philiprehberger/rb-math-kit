@@ -529,6 +529,82 @@ RSpec.describe Philiprehberger::MathKit do
     end
   end
 
+  describe 'Stats.describe' do
+    it 'returns summary statistics' do
+      result = Philiprehberger::MathKit::Stats.describe([1, 2, 3, 4, 5])
+      expect(result[:count]).to eq(5)
+      expect(result[:mean]).to eq(3.0)
+      expect(result[:median]).to eq(3.0)
+      expect(result[:min]).to eq(1.0)
+      expect(result[:max]).to eq(5.0)
+      expect(result[:p25]).to eq(2.0)
+      expect(result[:p50]).to eq(3.0)
+      expect(result[:p75]).to eq(4.0)
+    end
+
+    it 'handles single value' do
+      result = Philiprehberger::MathKit::Stats.describe([42])
+      expect(result[:count]).to eq(1)
+      expect(result[:mean]).to eq(42.0)
+      expect(result[:stddev]).to eq(0.0)
+    end
+
+    it 'raises for empty array' do
+      expect { Philiprehberger::MathKit::Stats.describe([]) }.to raise_error(ArgumentError)
+    end
+  end
+
+  describe 'Stats.histogram' do
+    it 'bins values into equal-width ranges' do
+      result = Philiprehberger::MathKit::Stats.histogram([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], bins: 5)
+      expect(result.length).to eq(5)
+      expect(result.sum { |b| b[:count] }).to eq(10)
+    end
+
+    it 'handles single bin' do
+      result = Philiprehberger::MathKit::Stats.histogram([1, 2, 3], bins: 1)
+      expect(result.length).to eq(1)
+      expect(result.first[:count]).to eq(3)
+    end
+
+    it 'handles identical values' do
+      result = Philiprehberger::MathKit::Stats.histogram([5, 5, 5], bins: 3)
+      expect(result.sum { |b| b[:count] }).to eq(3)
+    end
+
+    it 'raises for empty array' do
+      expect { Philiprehberger::MathKit::Stats.histogram([]) }.to raise_error(ArgumentError)
+    end
+
+    it 'raises for bins < 1' do
+      expect { Philiprehberger::MathKit::Stats.histogram([1, 2], bins: 0) }.to raise_error(ArgumentError)
+    end
+  end
+
+  describe 'Stats.weighted_mean' do
+    it 'computes weighted mean' do
+      result = Philiprehberger::MathKit::Stats.weighted_mean([10, 20, 30], weights: [1, 1, 1])
+      expect(result).to eq(20.0)
+    end
+
+    it 'applies weights correctly' do
+      result = Philiprehberger::MathKit::Stats.weighted_mean([10, 20], weights: [3, 1])
+      expect(result).to eq(12.5)
+    end
+
+    it 'raises for mismatched sizes' do
+      expect { Philiprehberger::MathKit::Stats.weighted_mean([1, 2], weights: [1]) }.to raise_error(ArgumentError)
+    end
+
+    it 'raises for empty array' do
+      expect { Philiprehberger::MathKit::Stats.weighted_mean([], weights: []) }.to raise_error(ArgumentError)
+    end
+
+    it 'raises for zero-sum weights' do
+      expect { Philiprehberger::MathKit::Stats.weighted_mean([1, 2], weights: [0, 0]) }.to raise_error(ArgumentError)
+    end
+  end
+
   describe Philiprehberger::MathKit::Regression do
     describe '.linear' do
       it 'fits a perfect line' do

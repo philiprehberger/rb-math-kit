@@ -291,6 +291,71 @@ module Philiprehberger
           mean(winsorized)
         end
 
+        # Summary statistics for a dataset
+        #
+        # @param values [Array<Numeric>] the input values
+        # @return [Hash] with :count, :mean, :median, :min, :max, :stddev, :variance, :p25, :p50, :p75
+        # @raise [ArgumentError] if values is empty
+        def describe(values)
+          raise ArgumentError, 'values must not be empty' if values.empty?
+
+          {
+            count: values.size,
+            mean: mean(values),
+            median: median(values),
+            min: values.min.to_f,
+            max: values.max.to_f,
+            stddev: values.size >= 2 ? stddev(values, population: false) : 0.0,
+            variance: values.size >= 2 ? variance(values, population: false) : 0.0,
+            p25: percentile(values, 25),
+            p50: percentile(values, 50),
+            p75: percentile(values, 75)
+          }
+        end
+
+        # Frequency distribution (histogram)
+        #
+        # @param values [Array<Numeric>] the input values
+        # @param bins [Integer] number of bins (default: 10)
+        # @return [Array<Hash>] array of { min:, max:, count: } hashes
+        # @raise [ArgumentError] if values is empty or bins < 1
+        def histogram(values, bins: 10)
+          raise ArgumentError, 'values must not be empty' if values.empty?
+          raise ArgumentError, 'bins must be at least 1' if bins < 1
+
+          min_val = values.min.to_f
+          max_val = values.max.to_f
+          width = max_val == min_val ? 1.0 : (max_val - min_val) / bins.to_f
+
+          result = Array.new(bins) do |i|
+            { min: min_val + (i * width), max: min_val + ((i + 1) * width), count: 0 }
+          end
+
+          values.each do |v|
+            idx = width.zero? ? 0 : ((v - min_val) / width).floor
+            idx = bins - 1 if idx >= bins
+            result[idx][:count] += 1
+          end
+
+          result
+        end
+
+        # Weighted arithmetic mean
+        #
+        # @param values [Array<Numeric>] the input values
+        # @param weights [Array<Numeric>] the corresponding weights
+        # @return [Float] the weighted mean
+        # @raise [ArgumentError] if arrays differ in size, are empty, or weights sum to zero
+        def weighted_mean(values, weights:)
+          raise ArgumentError, 'values must not be empty' if values.empty?
+          raise ArgumentError, 'values and weights must have the same size' if values.size != weights.size
+
+          total_weight = weights.sum.to_f
+          raise ArgumentError, 'weights must not sum to zero' if total_weight.zero?
+
+          values.zip(weights).sum { |v, w| v * w } / total_weight
+        end
+
         private
 
         # T-distribution critical values for common confidence levels
