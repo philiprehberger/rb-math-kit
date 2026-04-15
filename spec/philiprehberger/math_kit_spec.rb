@@ -645,4 +645,136 @@ RSpec.describe Philiprehberger::MathKit do
       end
     end
   end
+
+  describe Philiprehberger::MathKit::Numeric do
+    describe '.factorial' do
+      it 'returns 1 for 0' do
+        expect(described_class.factorial(0)).to eq(1)
+      end
+
+      it 'returns 1 for 1' do
+        expect(described_class.factorial(1)).to eq(1)
+      end
+
+      it 'calculates factorial of a small number' do
+        expect(described_class.factorial(5)).to eq(120)
+      end
+
+      it 'handles larger values with arbitrary precision integers' do
+        expect(described_class.factorial(20)).to eq(2_432_902_008_176_640_000)
+      end
+
+      it 'raises on negative input' do
+        expect { described_class.factorial(-1) }.to raise_error(ArgumentError)
+      end
+
+      it 'raises on non-integer input' do
+        expect { described_class.factorial(3.5) }.to raise_error(ArgumentError)
+      end
+    end
+
+    describe '.fibonacci' do
+      it 'returns 0 for index 0' do
+        expect(described_class.fibonacci(0)).to eq(0)
+      end
+
+      it 'returns 1 for index 1' do
+        expect(described_class.fibonacci(1)).to eq(1)
+      end
+
+      it 'returns known values in the sequence' do
+        expect((0..9).map { |i| described_class.fibonacci(i) }).to eq([0, 1, 1, 2, 3, 5, 8, 13, 21, 34])
+      end
+
+      it 'handles larger indices' do
+        expect(described_class.fibonacci(20)).to eq(6765)
+      end
+
+      it 'raises on negative input' do
+        expect { described_class.fibonacci(-1) }.to raise_error(ArgumentError)
+      end
+
+      it 'raises on non-integer input' do
+        expect { described_class.fibonacci(2.5) }.to raise_error(ArgumentError)
+      end
+    end
+
+    describe '.gcd' do
+      it 'returns the greatest common divisor' do
+        expect(described_class.gcd(12, 18)).to eq(6)
+      end
+
+      it 'returns the non-zero value when one input is zero' do
+        expect(described_class.gcd(0, 7)).to eq(7)
+        expect(described_class.gcd(7, 0)).to eq(7)
+      end
+
+      it 'returns 0 when both inputs are zero' do
+        expect(described_class.gcd(0, 0)).to eq(0)
+      end
+
+      it 'handles negative inputs' do
+        expect(described_class.gcd(-12, 18)).to eq(6)
+        expect(described_class.gcd(-12, -18)).to eq(6)
+      end
+
+      it 'returns 1 for coprime values' do
+        expect(described_class.gcd(17, 13)).to eq(1)
+      end
+
+      it 'raises on non-integer input' do
+        expect { described_class.gcd(1.5, 3) }.to raise_error(ArgumentError)
+      end
+    end
+
+    describe '.lcm' do
+      it 'returns the least common multiple' do
+        expect(described_class.lcm(4, 6)).to eq(12)
+      end
+
+      it 'returns 0 when either input is zero' do
+        expect(described_class.lcm(0, 5)).to eq(0)
+        expect(described_class.lcm(5, 0)).to eq(0)
+      end
+
+      it 'handles negative inputs' do
+        expect(described_class.lcm(-4, 6)).to eq(12)
+      end
+
+      it 'handles coprime values' do
+        expect(described_class.lcm(7, 5)).to eq(35)
+      end
+
+      it 'raises on non-integer input' do
+        expect { described_class.lcm(2, 3.5) }.to raise_error(ArgumentError)
+      end
+    end
+
+    describe '.clamp' do
+      it 'returns the value when inside the range' do
+        expect(described_class.clamp(5, 0, 10)).to eq(5)
+      end
+
+      it 'returns min when below the range' do
+        expect(described_class.clamp(-3, 0, 10)).to eq(0)
+      end
+
+      it 'returns max when above the range' do
+        expect(described_class.clamp(42, 0, 10)).to eq(10)
+      end
+
+      it 'returns the value when exactly at the bounds' do
+        expect(described_class.clamp(0, 0, 10)).to eq(0)
+        expect(described_class.clamp(10, 0, 10)).to eq(10)
+      end
+
+      it 'works with floats' do
+        expect(described_class.clamp(1.5, 0.0, 1.0)).to eq(1.0)
+      end
+
+      it 'raises when min is greater than max' do
+        expect { described_class.clamp(5, 10, 0) }.to raise_error(ArgumentError)
+      end
+    end
+  end
 end

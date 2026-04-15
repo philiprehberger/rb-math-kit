@@ -138,6 +138,16 @@ Philiprehberger::MathKit::MovingAverage.simple([1, 2, 3, 4, 5], window: 3)      
 Philiprehberger::MathKit::MovingAverage.exponential([1, 2, 3, 4, 5], alpha: 0.5) # => [1.0, 1.5, 2.25, 3.125, 4.0625]
 ```
 
+### Numeric Helpers
+
+```ruby
+Philiprehberger::MathKit::Numeric.factorial(5)      # => 120
+Philiprehberger::MathKit::Numeric.fibonacci(10)     # => 55
+Philiprehberger::MathKit::Numeric.gcd(12, 18)       # => 6
+Philiprehberger::MathKit::Numeric.lcm(4, 6)         # => 12
+Philiprehberger::MathKit::Numeric.clamp(42, 0, 10)  # => 10
+```
+
 ## API
 
 ### `Stats`
@@ -197,6 +207,16 @@ Philiprehberger::MathKit::MovingAverage.exponential([1, 2, 3, 4, 5], alpha: 0.5)
 |--------|-------------|
 | `.simple(values, window:)` | Simple moving average |
 | `.exponential(values, alpha:)` | Exponential moving average |
+
+### `Numeric`
+
+| Method | Description |
+|--------|-------------|
+| `.factorial(n)` | Factorial of a non-negative integer |
+| `.fibonacci(n)` | N-th Fibonacci number (0-indexed) |
+| `.gcd(a, b)` | Greatest common divisor of two integers |
+| `.lcm(a, b)` | Least common multiple of two integers |
+| `.clamp(value, min, max)` | Clamp a numeric value between min and max |
 
 ## Development
 

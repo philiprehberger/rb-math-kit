@@ -6,6 +6,7 @@ require_relative 'math_kit/interpolation'
 require_relative 'math_kit/round'
 require_relative 'math_kit/moving_average'
 require_relative 'math_kit/regression'
+require_relative 'math_kit/numeric'
 
 module Philiprehberger
   module MathKit
