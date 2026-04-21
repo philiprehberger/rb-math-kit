@@ -151,6 +151,31 @@ RSpec.describe Philiprehberger::MathKit do
       end
     end
 
+    describe '.sum_of_squares' do
+      it 'returns 0.0 for an empty array' do
+        expect(described_class.sum_of_squares([])).to eq(0.0)
+      end
+
+      it 'returns 0.0 for a single element' do
+        expect(described_class.sum_of_squares([42])).to eq(0.0)
+      end
+
+      it 'computes sum of squared deviations from the mean' do
+        # mean([1,2,3]) = 2 → (1-2)^2 + (2-2)^2 + (3-2)^2 = 2
+        expect(described_class.sum_of_squares([1, 2, 3])).to be_within(1e-9).of(2.0)
+      end
+
+      it 'handles floats' do
+        expect(described_class.sum_of_squares([1.0, 2.0, 3.0, 4.0])).to be_within(1e-9).of(5.0)
+      end
+
+      it 'equals (n-1) * sample_variance' do
+        values = [4, 8, 15, 16, 23, 42]
+        expected = (values.size - 1) * described_class.variance(values, population: false)
+        expect(described_class.sum_of_squares(values)).to be_within(1e-9).of(expected)
+      end
+    end
+
     describe '.range' do
       it 'calculates range' do
         expect(described_class.range([1, 5, 3, 9, 2])).to eq(8)

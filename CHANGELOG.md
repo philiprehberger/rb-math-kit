@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-04-21
+
+### Added
+- `Stats.sum_of_squares(values)` — sum of squared deviations from the mean, a building block for variance, regression residuals, and ANOVA; returns 0.0 for empty or single-element inputs
+
 ## [0.4.0] - 2026-04-15
 
 ### Added

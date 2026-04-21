@@ -41,6 +41,7 @@ Philiprehberger::MathKit::Stats.stddev([2, 4, 4, 4, 5, 5, 7, 9])    # => 2.0
 Philiprehberger::MathKit::Stats.percentile([1, 2, 3, 4, 5], 50)      # => 3.0
 Philiprehberger::MathKit::Stats.sum([1, 2, 3])                # => 6
 Philiprehberger::MathKit::Stats.range([1, 5, 3, 9, 2])        # => 8
+Philiprehberger::MathKit::Stats.sum_of_squares([1, 2, 3])     # => 2.0
 ```
 
 ### Summary Statistics
@@ -161,6 +162,7 @@ Philiprehberger::MathKit::Numeric.clamp(42, 0, 10)  # => 10
 | `.stddev(values, population: true)` | Standard deviation |
 | `.percentile(values, p)` | Percentile (0-100) with linear interpolation |
 | `.sum(values)` | Sum of values |
+| `.sum_of_squares(values)` | Sum of squared deviations from the mean (0.0 for empty/single input) |
 | `.range(values)` | Max - min |
 | `.skewness(values)` | Sample skewness (Fisher-Pearson) |
 | `.kurtosis(values)` | Sample excess kurtosis (Fisher definition) |
