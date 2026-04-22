@@ -105,6 +105,19 @@ module Philiprehberger
           values.sum
         end
 
+        # Sum of squared deviations from the mean: \sum_i (x_i - mean)^2.
+        # Building block for variance, regression residuals, ANOVA, etc.
+        # Returns 0.0 for empty or single-element inputs.
+        #
+        # @param values [Array<Numeric>] the input values
+        # @return [Float] the sum of squares
+        def sum_of_squares(values)
+          return 0.0 if values.size < 2
+
+          avg = mean(values)
+          values.sum(0.0) { |v| (v - avg)**2 }
+        end
+
         # Range (max - min)
         #
         # @param values [Array<Numeric>] the input values
