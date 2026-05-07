@@ -97,6 +97,17 @@ module Philiprehberger
           (sorted[lower] + (fraction * (sorted[upper] - sorted[lower]))).to_f
         end
 
+        # Interquartile range (Q3 - Q1) using linear interpolation
+        #
+        # @param values [Array<Numeric>] the input values
+        # @return [Float] Q3 minus Q1
+        # @raise [ArgumentError] if values is empty
+        def iqr(values)
+          raise ArgumentError, 'values must not be empty' if values.empty?
+
+          percentile(values, 75) - percentile(values, 25)
+        end
+
         # Sum of values
         #
         # @param values [Array<Numeric>] the input values

@@ -44,6 +44,12 @@ Philiprehberger::MathKit::Stats.range([1, 5, 3, 9, 2])        # => 8
 Philiprehberger::MathKit::Stats.sum_of_squares([1, 2, 3])     # => 2.0
 ```
 
+### Interquartile Range
+
+```ruby
+Philiprehberger::MathKit::Stats.iqr([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])  # => 4.5
+```
+
 ### Summary Statistics
 
 ```ruby
@@ -161,6 +167,7 @@ Philiprehberger::MathKit::Numeric.clamp(42, 0, 10)  # => 10
 | `.variance(values, population: true)` | Population or sample variance |
 | `.stddev(values, population: true)` | Standard deviation |
 | `.percentile(values, p)` | Percentile (0-100) with linear interpolation |
+| `.iqr(values)` | Interquartile range (Q3 - Q1) |
 | `.sum(values)` | Sum of values |
 | `.sum_of_squares(values)` | Sum of squared deviations from the mean (0.0 for empty/single input) |
 | `.range(values)` | Max - min |

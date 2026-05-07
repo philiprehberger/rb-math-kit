@@ -137,6 +137,36 @@ RSpec.describe Philiprehberger::MathKit do
       end
     end
 
+    describe '.iqr' do
+      it 'returns a Float equal to Q3 minus Q1' do
+        values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        expected = described_class.percentile(values, 75) - described_class.percentile(values, 25)
+        result = described_class.iqr(values)
+        expect(result).to be_a(Float)
+        expect(result).to be_within(0.001).of(expected)
+      end
+
+      it 'returns 0.0 for a constant array' do
+        expect(described_class.iqr([5, 5, 5, 5])).to eq(0.0)
+      end
+
+      it 'matches the percentile definition for a random sample' do
+        values = [4, 8, 15, 16, 23, 42, 7, 19, 31, 2]
+        expected = described_class.percentile(values, 75) - described_class.percentile(values, 25)
+        expect(described_class.iqr(values)).to be_within(0.001).of(expected)
+      end
+
+      it 'raises on empty array' do
+        expect { described_class.iqr([]) }.to raise_error(ArgumentError)
+      end
+
+      # Other methods in this file also raise via .empty? on nil input (NoMethodError),
+      # so iqr inherits the same behaviour — nil is not a supported input type.
+      it 'raises on nil input' do
+        expect { described_class.iqr(nil) }.to raise_error(NoMethodError)
+      end
+    end
+
     describe '.sum' do
       it 'sums integers' do
         expect(described_class.sum([1, 2, 3, 4, 5])).to eq(15)
